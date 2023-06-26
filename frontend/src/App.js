@@ -14,7 +14,7 @@ const App = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/contacts');
+      const response = await axios.get('https://cms-wf0i.onrender.com/api/contacts');
       setContacts(response.data);
     } catch (error) {
       console.log(error);
@@ -24,7 +24,7 @@ const App = () => {
   const handleAddContact = async (newContact) => {
     const contactWithId = { ...newContact, id: uuidv4() };
     try {
-      const response = await axios.post('http://localhost:5000/api/contacts', contactWithId);
+      const response = await axios.post('https://cms-wf0i.onrender.com/api/contacts', contactWithId);
       setContacts([...contacts, response.data]);
     } catch (error) {
       console.log(error);
@@ -33,7 +33,7 @@ const App = () => {
 
   const handleUpdateContact = async (updatedContact) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/contacts/${updatedContact.id}`, updatedContact);
+      const response = await axios.put(`https://cms-wf0i.onrender.com/api/contacts/${updatedContact.id}`, updatedContact);
       setContacts(contacts.map((contact) => (contact.id === updatedContact.id ? response.data : contact)));
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ const App = () => {
 
   const handleDeleteContact = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+      await axios.delete(`https://cms-wf0i.onrender.com/api/contacts/${id}`);
       setContacts(contacts.filter((contact) => contact.id !== id));
     } catch (error) {
       console.log(error);
@@ -203,7 +203,7 @@ const EditContactForm = ({ onUpdate }) => {
 
   const fetchContact = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/contacts/${id}`);
+      const response = await axios.get(`https://cms-wf0i.onrender.com/api/contacts/${id}`);
       setContact(response.data);
     } catch (error) {
       console.log(error);
