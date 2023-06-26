@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchContacts();
@@ -48,17 +49,36 @@ const App = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Router>
       <Container>
         <h1>Contact Management App</h1>
+
+        <Form>
+          <Form.Group controlId="formSearch">
+            <Form.Control
+              type="text"
+              placeholder="Search by name"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </Form.Group>
+        </Form>
 
         <Routes>
           <Route
             path="/"
             element={
               <ContactList
-                contacts={contacts}
+                contacts={filteredContacts}
                 onDelete={handleDeleteContact}
               />
             }
@@ -104,10 +124,7 @@ const ContactList = ({ contacts, onDelete }) => (
                 <Link to={`/edit/${contact.id}`}>
                   <Button variant="primary">Edit</Button>
                 </Link>
-                <Button
-                  variant="danger"
-                  onClick={() => onDelete(contact.id)}
-                >
+                <Button variant="danger" onClick={() => onDelete(contact.id)}>
                   Delete
                 </Button>
               </td>
