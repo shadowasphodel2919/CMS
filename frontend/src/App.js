@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 const App = () => {
   const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchContacts();
@@ -53,6 +54,28 @@ const App = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleSort = () => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newSortOrder);
+
+    const sortedContacts = [...filteredContacts].sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      if (newSortOrder === 'asc') {
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+      } else {
+        if (nameA > nameB) return -1;
+        if (nameA < nameB) return 1;
+      }
+
+      return 0;
+    });
+
+    setContacts(sortedContacts);
+  };
+
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -80,6 +103,8 @@ const App = () => {
               <ContactList
                 contacts={filteredContacts}
                 onDelete={handleDeleteContact}
+                onSort={handleSort}
+                sortOrder={sortOrder}
               />
             }
           />
@@ -101,10 +126,13 @@ const App = () => {
   );
 };
 
-const ContactList = ({ contacts, onDelete }) => (
+const ContactList = ({ contacts, onDelete, onSort, sortOrder }) => (
   <Row>
     <Col>
       <h2>Contacts</h2>
+      <Button variant="secondary" onClick={onSort}>
+        Sort by Name {sortOrder === 'asc' ? '↑' : '↓'}
+      </Button>
       <Table striped bordered hover>
         <thead>
           <tr>
